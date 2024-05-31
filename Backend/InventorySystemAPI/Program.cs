@@ -1,5 +1,7 @@
 using InventorySystemAPI.Data;
+using InventorySystemAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 namespace InventorySystemAPI
 {
@@ -19,7 +21,12 @@ namespace InventorySystemAPI
             });
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Inventory Management System API", Version = "v1" });
+            });
+
+            builder.Services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
 
             //services cors
             builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
