@@ -25,9 +25,9 @@ namespace InventorySystemAPI.Data
                 entity.Property(o => o.OrderType)
                 .HasConversion<string>();
 
-                entity.HasCheckConstraint("CHK_Orders_FkCustomerID",
-                    @"(OrderType = 'Sale' AND FkCustomerID IS NOT NULL AND FkSupplierID IS NULL) OR
-                  (OrderType = 'Purchase' AND FkSupplierID IS NOT NULL AND FkCustomerID IS NULL)");
+                entity.ToTable(t => t.HasCheckConstraint("CHK_Orders_FkCustomerID",
+            @"(OrderType = 'Sale' AND FkCustomerID IS NOT NULL AND FkSupplierID IS NULL) OR
+              (OrderType = 'Purchase' AND FkSupplierID IS NOT NULL AND FkCustomerID IS NULL)"));
             });
 
             modelBuilder.Entity<Contact>(entity =>
@@ -48,6 +48,15 @@ namespace InventorySystemAPI.Data
                 entity.Property(p => p.SellPrice).HasColumnType("decimal(10,2)");
                 entity.Property(p => p.CostPrice).HasColumnType("decimal(10,2)");
             });
+
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.HasOne(p => p.Inventory)
+                .WithOne(i => i.Products)
+                .HasForeignKey<Inventory>(i => i.FkProductId);
+
+            });
+
         }
     }
 }

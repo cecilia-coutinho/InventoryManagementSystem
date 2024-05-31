@@ -17,7 +17,7 @@ namespace InventorySystemAPI.Models
         public virtual ProductCategory? ProductCategories { get; set; }
 
         [JsonIgnore]
-        public ICollection<Inventory>? Inventories { get; set; }
+        public virtual Inventory? Inventory { get; set; }
 
         [JsonIgnore]
         public ICollection<OrderDetail>? OrderDetails { get; set; }
