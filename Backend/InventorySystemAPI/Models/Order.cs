@@ -4,10 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace InventorySystemAPI.Models
 {
-    public class Order
+    public class Order : BaseEntity
     {
-        [Key]
-        public Guid OrderID { get; set; }
         public Guid? FkCustomerId { get; set; }
         public Guid? FkSupplierID { get; set; }
         public OrderType OrderType { get; set; }

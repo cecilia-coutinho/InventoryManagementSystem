@@ -3,10 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace InventorySystemAPI.Models
 {
-    public class Customer
+    public class Customer : BaseEntity
     {
-        [Key]
-        public Guid CustomerID { get; set; }
         public Guid FkContactId { get; set; }
         public string? CustomerName { get; set; }
         public string? ShippingAddress { get; set; }
