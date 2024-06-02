@@ -28,6 +28,7 @@ namespace InventorySystemAPI
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
             builder.Services.AddScoped<IContactRepository, ContactRepository>();
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 
             //services cors
