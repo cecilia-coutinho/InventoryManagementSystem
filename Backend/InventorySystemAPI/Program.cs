@@ -27,6 +27,8 @@ namespace InventorySystemAPI
             });
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
+            builder.Services.AddScoped<IContactRepository, ContactRepository>();
+
 
             //services cors
             builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>

@@ -10,9 +10,9 @@ namespace InventorySystemAPI.Controllers
     [ApiController]
     public class ContactsController : ControllerBase
     {
-        public readonly IGenericRepository<Contact> _contactRepository;
+        public readonly IContactRepository _contactRepository;
 
-        public ContactsController(IGenericRepository<Contact> contactRepository)
+        public ContactsController(IContactRepository contactRepository)
         {
             _contactRepository = contactRepository;
         }
@@ -26,58 +26,44 @@ namespace InventorySystemAPI.Controllers
         }
 
         // GET: api/Contacts/WithFilterAndPagination?pageSize=10&pageIndex=0&filterOn=FirstName&filterQuery=John&sortBy=FirstName&isAscending=true
-        [HttpGet("WithFilterAndPagination")]
-        public async Task<IActionResult> GetContactsWithFilterAndPagination(
+        [HttpGet("WithFilterSortAndPagination")]
+        public async Task<IActionResult> GetContactsWithFilterSortAndPagination(
             [FromQuery] int pageSize = 10,
             [FromQuery] int pageIndex = 0,
             [FromQuery] string? filterOn = null,
             [FromQuery] string? filterQuery = null,
             [FromQuery] string? sortBy = null,
-            [FromQuery] bool isAscending = true)
+            [FromQuery] bool isDescending = false)
         {
-            // Create search predicate based on query parameters
-            Expression<Func<Contact, bool>>? searchPredicate = null;
-            if (!string.IsNullOrEmpty(filterOn) && !string.IsNullOrEmpty(filterQuery))
+            try
             {
-                switch (filterOn?.ToUpperInvariant())
+                var (result, totalRecordCount, totalPages, isPrevious, isNext) = await _contactRepository.SearchSortAndPaginationAsync(
+                    filterOn,
+                    filterQuery,
+                    sortBy,
+                    isDescending,
+                    pageIndex,
+                    pageSize);
+
+                if (result == null || !result.Any())
                 {
-                    case "FIRSTNAME":
-                        searchPredicate = c => !string.IsNullOrEmpty(c.FirstName) && c.FirstName.Contains(filterQuery);
-                        break;
-                    case "LASTNAME":
-                        searchPredicate = c => !string.IsNullOrEmpty(c.LastName) && c.LastName.Contains(filterQuery);
-                        break;
-                    case "EMAIL":
-                        searchPredicate = c => !string.IsNullOrEmpty(c.Email) && c.Email.Contains(filterQuery);
-                        break;
-                    default:
-                        return BadRequest("Invalid filterOn value.");
+                    return NotFound("No data found.");
                 }
+
+                return Ok(new
+                {
+                    Result = result,
+                    TotalRecordCount = totalRecordCount,
+                    TotalPages = totalPages,
+                    IsPrevious = isPrevious,
+                    IsNext = isNext
+                });
             }
-
-            // Call repository method with search predicate
-            var (result, totalRecordCount, totalPages, isPrevious, isNext) = await _contactRepository.SearchOrderAndPaginationAsync(
-                searchPredicate,
-                orderBy: null,
-                isDescending: !isAscending,
-                pageNumber: pageIndex,
-                pageSize: pageSize,
-                includeProperties: null);
-
-            if (result == null || !result.Any())
+            catch (ArgumentException ex)
             {
-                return NotFound("No data found.");
+                return BadRequest(ex.Message);
+
             }
-
-            // Return the result with pagination information
-            return Ok(new
-            {
-                Result = result,
-                TotalRecordCount = totalRecordCount,
-                TotalPages = totalPages,
-                IsPrevious = isPrevious,
-                IsNext = isNext
-            });
         }
 
         // GET: api/Contacts/5
