@@ -2,7 +2,7 @@
 
 namespace InventorySystemAPI.DTOs
 {
-    public class ContactDTO
+    public class ContactCreateDto
     {
         [Required]
         [StringLength(50)]
