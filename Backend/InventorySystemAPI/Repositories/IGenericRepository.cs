@@ -20,6 +20,6 @@ namespace InventorySystemAPI.Repositories
             params Expression<Func<T, object>>[]? includeProperties);
 
         Task<IEnumerable<T>> GetAllWithSpecAsync(ISpecification<T>? specification = null);
-        Task<T> GetEntityWithSpecAsync(ISpecification<T>? specification = null);
+        Task<T?> GetEntityWithSpecAsync(ISpecification<T>? specification = null);
     }
 }

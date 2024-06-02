@@ -127,7 +127,7 @@ namespace InventorySystemAPI.Repositories
             return query;
         }
 
-        public async Task<T> GetEntityWithSpecAsync(ISpecification<T>? specification = null)
+        public virtual async Task<T?> GetEntityWithSpecAsync(ISpecification<T>? specification = null)
         {
             var query = ApplySpecificationforList(specification);
             var result = await query.FirstOrDefaultAsync();

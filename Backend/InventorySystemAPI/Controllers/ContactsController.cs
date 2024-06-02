@@ -1,6 +1,8 @@
-﻿using InventorySystemAPI.DTOs;
+﻿using InventorySystemAPI.CustomActionFilters;
+using InventorySystemAPI.DTOs;
 using InventorySystemAPI.Models;
 using InventorySystemAPI.Repositories;
+using InventorySystemAPI.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 
@@ -75,8 +77,17 @@ namespace InventorySystemAPI.Controllers
 
         // POST: api/Contacts
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> CreateContact([FromBody] ContactCreateDto contactDto)
         {
+            // Check if a contact with the same email already exists
+            var existingContact = await _contactRepository.GetEntityWithSpecAsync(new ContactEmailSpecification(contactDto.Email!));
+
+            if (existingContact != null)
+            {
+                return Conflict("A contact with this email already exists.");
+            }
+
             var contact = new Contact
             {
                 FirstName = contactDto.FirstName,
@@ -90,6 +101,7 @@ namespace InventorySystemAPI.Controllers
 
         // PUT: api/Contacts/5
         [HttpPut("{id}")]
+        [ValidateModel]
         public async Task<IActionResult> UpdateContact(Guid id, [FromBody] ContactCreateDto contactDto)
         {
             var existingContact = await _contactRepository.GetByIdAsync(id);
@@ -97,6 +109,14 @@ namespace InventorySystemAPI.Controllers
             if (existingContact == null)
             {
                 return NotFound();
+            }
+
+            // Check if a contact with the same email already exists
+            var contactWithSameEmail = await _contactRepository.GetEntityWithSpecAsync(new ContactEmailSpecification(contactDto.Email!));
+
+            if (contactWithSameEmail != null && contactWithSameEmail.Id != id)
+            {
+                return Conflict("A contact with this email already exists.");
             }
 
             existingContact.FirstName = contactDto.FirstName;

@@ -1,4 +1,5 @@
 ﻿using InventorySystemAPI.Models;
+using InventorySystemAPI.Specifications;
 
 namespace InventorySystemAPI.Repositories
 {
@@ -11,5 +12,7 @@ namespace InventorySystemAPI.Repositories
             bool isDescending,
             int pageNumber,
             int pageSize);
+
+        new Task<Contact?> GetEntityWithSpecAsync(ISpecification<Contact>? specification = null);
     }
 }

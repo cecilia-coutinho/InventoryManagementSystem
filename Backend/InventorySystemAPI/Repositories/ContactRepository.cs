@@ -1,5 +1,7 @@
 ﻿using InventorySystemAPI.Data;
 using InventorySystemAPI.Models;
+using InventorySystemAPI.Specifications;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Linq.Expressions;
 
@@ -62,11 +64,31 @@ namespace InventorySystemAPI.Repositories
             }
 
             return await base.SearchSortAndPaginationAsync(
-                 searchPredicate,
-                 orderBy,
-                 isDescending,
-                 pageNumber,
-                 pageSize);
+                searchPredicate,
+                orderBy,
+                isDescending,
+                pageNumber,
+                pageSize
+            );
+        }
+
+        private IQueryable<Contact> ApplySpecificationforList(ISpecification<Contact>? spec)
+        {
+            IQueryable<Contact> query = _context.Set<Contact>();
+
+            if (spec != null)
+            {
+                query = SpecificationEvaluator<Contact>.GetQuery(query, spec);
+            }
+
+            return query;
+        }
+
+       public override async Task<Contact?> GetEntityWithSpecAsync(ISpecification<Contact>? specification = null)
+        {
+            var query = ApplySpecificationforList(specification);
+            var result = await query.FirstOrDefaultAsync();
+            return result;
         }
     }
 }
