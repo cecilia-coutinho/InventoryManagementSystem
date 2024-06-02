@@ -1,5 +1,6 @@
 ﻿using InventorySystemAPI.Data;
 using InventorySystemAPI.Models;
+using InventorySystemAPI.Repositories.GenericRepository;
 using InventorySystemAPI.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;

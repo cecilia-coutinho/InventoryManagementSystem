@@ -1,4 +1,5 @@
 ﻿using InventorySystemAPI.Models;
+using InventorySystemAPI.Repositories.GenericRepository;
 
 namespace InventorySystemAPI.Repositories
 {

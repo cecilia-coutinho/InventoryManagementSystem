@@ -1,5 +1,6 @@
 ﻿using InventorySystemAPI.Data;
 using InventorySystemAPI.Models;
+using InventorySystemAPI.Repositories.GenericRepository;
 using System.Linq.Expressions;
 
 namespace InventorySystemAPI.Repositories
