@@ -17,17 +17,9 @@ namespace InventorySystemAPI.Controllers
             _contactRepository = contactRepository;
         }
 
-        // GET: api/Contacts
+        // GET: api/Contacts?pageSize=10&pageNumber=1&filterOn=FirstName&filterQuery=John&sortBy=FirstName&isDescending=true
         [HttpGet]
-        public async Task<IActionResult> GetContacts()
-        {
-            var contacts = await _contactRepository.GetAllAsync();
-            return Ok(contacts);
-        }
-
-        // GET: api/Contacts/WithFilterAndPagination?pageSize=10&pageIndex=0&filterOn=FirstName&filterQuery=John&sortBy=FirstName&isAscending=true
-        [HttpGet("WithFilterSortAndPagination")]
-        public async Task<IActionResult> GetContactsWithFilterSortAndPagination(
+        public async Task<IActionResult> GetContacts(
             [FromQuery] int pageSize = 10,
             [FromQuery] int pageNumber = 1,
             [FromQuery] string? filterOn = null,
