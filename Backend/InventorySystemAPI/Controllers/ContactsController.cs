@@ -75,7 +75,7 @@ namespace InventorySystemAPI.Controllers
 
         // POST: api/Contacts
         [HttpPost]
-        public async Task<IActionResult> CreateContact([FromBody] ContactDTO contactDto)
+        public async Task<IActionResult> CreateContact([FromBody] ContactCreateDto contactDto)
         {
             var contact = new Contact
             {
@@ -90,7 +90,7 @@ namespace InventorySystemAPI.Controllers
 
         // PUT: api/Contacts/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateContact(Guid id, [FromBody] ContactDTO contactDto)
+        public async Task<IActionResult> UpdateContact(Guid id, [FromBody] ContactCreateDto contactDto)
         {
             var existingContact = await _contactRepository.GetByIdAsync(id);
 
