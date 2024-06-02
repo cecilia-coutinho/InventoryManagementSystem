@@ -13,12 +13,12 @@ namespace InventorySystemAPI.Repositories
             _context = context;
         }
 
-        public async Task<(ICollection<Contact> Result, int TotalRecordCount, int TotalPages, bool IsPrevious, bool IsNext)> SearchSortAndPaginationAsync(
+        public async Task<(ICollection<Contact> Result, int TotalRecordCount, int TotalPages, string PageNumberMessage, bool IsPrevious, bool IsNext)> SearchSortAndPaginationAsync(
             string? filterOn,
             string? filterQuery,
             string? sortBy,
             bool isDescending,
-            int pageIndex,
+            int pageNumber,
             int pageSize)
         {
             // search predicate based on filter parameters
@@ -65,7 +65,7 @@ namespace InventorySystemAPI.Repositories
                  searchPredicate,
                  orderBy,
                  isDescending,
-                 pageIndex,
+                 pageNumber,
                  pageSize);
         }
     }

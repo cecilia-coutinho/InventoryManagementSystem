@@ -51,8 +51,7 @@ namespace InventorySystemAPI.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<(ICollection<T> Result, int TotalRecordCount, int TotalPages,
-            bool IsPrevious, bool IsNext)> SearchSortAndPaginationAsync(
+        public async Task<(ICollection<T> Result, int TotalRecordCount, int TotalPages, string PageNumberMessage, bool IsPrevious, bool IsNext)> SearchSortAndPaginationAsync(
             Expression<Func<T, bool>>? searchPredicate = null,
             Expression<Func<T, object>>? orderBy = null,
             bool isDescending = false,
@@ -60,7 +59,14 @@ namespace InventorySystemAPI.Repositories
             int? pageSize = null,
             params Expression<Func<T, object>>[]? includeProperties)
         {
-            pageNumber ??= 0;
+            pageNumber ??= 1; //Default value
+            pageNumber--; // 0 based index
+
+            if (pageNumber < 0)
+            {
+                throw new ArgumentException("Page number cannot be less than 1.");
+            }
+
             pageSize ??= 10;
 
             IQueryable<T> query = _context.Set<T>();
@@ -93,12 +99,15 @@ namespace InventorySystemAPI.Repositories
                              .Take(pageSize.Value);
             }
 
-            bool? isPrevious = pageNumber.HasValue ? pageNumber > 1 : null;
-            bool? isNext = pageNumber.HasValue && totalPages.HasValue ? pageNumber < totalPages : null;
+            bool? isPrevious = pageNumber.HasValue ? pageNumber > 0 : null;
+            bool? isNext = pageNumber.HasValue && totalPages.HasValue ? pageNumber + 1 < totalPages : null;
+
+            int actualPageNumber = pageNumber.GetValueOrDefault(0) + 1;
+            string pageIndexMessage = totalPages.HasValue ? $"Page {actualPageNumber} from {totalPages} pages" : "";
 
             ICollection<T> result = await query.ToListAsync();
 
-            return (result, totalRecordCount, totalPages ?? 0, isPrevious ?? false, isNext ?? false);
+            return (result, totalRecordCount, totalPages ?? 0, pageIndexMessage, isPrevious ?? false, isNext ?? false);
         }
 
         public async Task<IEnumerable<T>> GetAllWithSpecAsync(ISpecification<T>? specification = null)

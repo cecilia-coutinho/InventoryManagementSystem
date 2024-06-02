@@ -29,7 +29,7 @@ namespace InventorySystemAPI.Controllers
         [HttpGet("WithFilterSortAndPagination")]
         public async Task<IActionResult> GetContactsWithFilterSortAndPagination(
             [FromQuery] int pageSize = 10,
-            [FromQuery] int pageIndex = 0,
+            [FromQuery] int pageNumber = 1,
             [FromQuery] string? filterOn = null,
             [FromQuery] string? filterQuery = null,
             [FromQuery] string? sortBy = null,
@@ -37,12 +37,12 @@ namespace InventorySystemAPI.Controllers
         {
             try
             {
-                var (result, totalRecordCount, totalPages, isPrevious, isNext) = await _contactRepository.SearchSortAndPaginationAsync(
+                var (result, totalRecordCount, totalPages, pageNumberMessage, isPrevious, isNext) = await _contactRepository.SearchSortAndPaginationAsync(
                     filterOn,
                     filterQuery,
                     sortBy,
                     isDescending,
-                    pageIndex,
+                    pageNumber,
                     pageSize);
 
                 if (result == null || !result.Any())
@@ -55,6 +55,7 @@ namespace InventorySystemAPI.Controllers
                     Result = result,
                     TotalRecordCount = totalRecordCount,
                     TotalPages = totalPages,
+                    PageNumberMessage = pageNumberMessage,
                     IsPrevious = isPrevious,
                     IsNext = isNext
                 });
