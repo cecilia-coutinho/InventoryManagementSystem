@@ -1,5 +1,6 @@
 using InventorySystemAPI.Data;
 using InventorySystemAPI.Repositories;
+using InventorySystemAPI.Repositories.GenericRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -29,6 +30,8 @@ namespace InventorySystemAPI
             builder.Services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
             builder.Services.AddScoped<IContactRepository, ContactRepository>();
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
+            builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 
 
             //services cors
