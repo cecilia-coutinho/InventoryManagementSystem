@@ -142,7 +142,7 @@ namespace InventorySystemAPI.Controllers
 
             await _contactRepository.DeleteAsync(contact);
 
-            return Ok(contact);
+            return Ok(new { message = "Contact deleted successfully.", contact });
         }
     }
 }
