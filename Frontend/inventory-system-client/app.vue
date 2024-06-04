@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <NuxtPwaAssets />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </div>
+    <div>
+        <NuxtLayout>
+            <NuxtPage />
+        </NuxtLayout>
+    </div>
 </template>
