@@ -12,37 +12,41 @@
             </v-btn>
         </v-row>
 
-        <div class="grid grid-cols-2">
-            <v-card-title>Categorias</v-card-title>
-            <v-card v-for="c in categories" :key="c.id" class="category-card">
-                <v-card-text>
-                    {{ c.productCategoryName }}
-                    <v-icon small class="mr-2" @click="openEditCategoryDialog(c.id, c)">mdi-pencil</v-icon>
-                </v-card-text>
-            </v-card>
-        </div>
-    </v-container>
+        <DataFetcher :uri="apiBaseUri">
+            <template #default="{ data, create, edit}">
+                <div class="grid grid-cols-2">
+                    <v-card-title>Categorias</v-card-title>
+                    <v-card v-for="c in data" :key="c.id" class="category-card">
+                        <v-card-text>
+                            {{ c.productCategoryName }}
+                            <v-icon small class="mr-2" @click="openEditCategoryDialog(c.id, c, edit)">mdi-pencil</v-icon>
+                        </v-card-text>
+                    </v-card>
+                </div>
 
-    <v-dialog v-model="dialog" persistent max-width="600px">
-        <v-card>
-            <v-card-title>
-                <span class="headline">{{ dialogTitle }}</span>
-            </v-card-title>
-            <v-card-text>
-                <v-container>
-                    <v-row>
-                        <v-col cols="12">
-                            <v-text-field v-model="editedCategory.productCategoryName" label="Category Name"></v-text-field>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn color="blue darken-1" text @click="close">Close</v-btn>
-                <v-btn color="#4caf50" text @click="save">Save</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+                <v-dialog v-model="dialog" persistent max-width="600px">
+                    <v-card>
+                        <v-card-title>
+                            <span class="headline">{{ dialogTitle }}</span>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-container>
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field v-model="editedCategory.productCategoryName" label="Category Name"></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn color="blue darken-1" text @click="close">Close</v-btn>
+                            <v-btn color="#4caf50" text @click="() => save(create, edit, refresh)">Save</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </template>
+        </DataFetcher>
+    </v-container>
 
     <PageFooter />
 </template>
@@ -56,59 +60,37 @@
 </style>
 
 <script setup>
-import { ref } from 'vue';
+    import { ref } from 'vue';
 
-const dialog = ref(false);
-const dialogTitle = ref('');
-const editedCategory = ref({ productCategoryName: '' });
-const currentCategoryId = ref(null);
-const { data: categories } = await useFetch('https://localhost:7171/api/ProductCategories');
+    const dialog = ref(false);
+    const dialogTitle = ref('');
+    const editedCategory = ref({ productCategoryName: '' });
+    const currentCategoryId = ref(null);
+    const apiBaseUri = ref('https://localhost:7171/api/ProductCategories');
 
-async function CreateCategory(category) {
-    const response = await $fetch('https://localhost:7171/api/ProductCategories', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(category)
-    });
-    categories.value.push(response);
-}
+    function openAddCategoryDialog() {
+        dialogTitle.value = 'Adicionar Nova Categoria';
+        editedCategory.value = { productCategoryName: '' };
+        currentCategoryId.value = null;
+        dialog.value = true;
+    }
 
-async function EditCategory(id, category) {
-    const response = await $fetch(`https://localhost:7171/api/ProductCategories/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(category)
-    });
-    categories.value = categories.value.map(c => c.id === id ? category : c);
-}
+    function openEditCategoryDialog(id, category) {
+        dialogTitle.value = 'Editar Categoria';
+        editedCategory.value = { ...category };
+        currentCategoryId.value = id;
+        dialog.value = true;
+    }
 
-function openAddCategoryDialog() {
-    dialogTitle.value = 'Add New Category';
-    editedCategory.value = { productCategoryName: '' };
-    currentCategoryId.value = null;
-    dialog.value = true;
-}
+    function close() {
+        dialog.value = false;
+    }
 
-function openEditCategoryDialog(id, category) {
-    dialogTitle.value = 'Edit Category';
-    editedCategory.value = { ...category };
-    currentCategoryId.value = id;
-    dialog.value = true;
-}
-
-function close() {
-    dialog.value = false;
-}
-
-    async function save() {
+    async function save(createFunction, editFunction) {
         if (currentCategoryId.value) {
-            await EditCategory(currentCategoryId.value, editedCategory.value);
+            await editFunction(currentCategoryId.value, editedCategory.value);
         } else {
-            await CreateCategory(editedCategory.value);
+            await createFunction(editedCategory.value);
         }
         close();
     }
