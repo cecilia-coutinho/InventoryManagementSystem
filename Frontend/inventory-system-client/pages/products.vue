@@ -8,27 +8,34 @@
     </v-container>
 
     <DataFetcher :uri="apiBaseUri">
-        <template #default="{ data, create, edit, deleteItem }">
+        <template #default="{ data, create, edit, deleteItem, refresh }">
             <div class="list-title">
                 <h1 class="col-span-6 font-bold">Produtos</h1>
             </div>
-            <div class="grid grid-cols-6 gap-4">
-                <div v-for="p in data.result" :key="p.id" style="border: 1px solid #4caf50; ">
-                    <div class="product-icon">
-                        <v-icon class="product-icon">mdi-cart-outline</v-icon>
-                    </div>
-                    <div class="col-span-1">{{ p.productName }}</div>
-                    <div class="col-span-1">{{ p.productDescription }}</div>
-                    <div class="col-span-1">Preco de venda: {{ p.sellPrice }}</div>
-                    <div class="col-span-1">Preco de custo: {{ p.costPrice }}</div>
-                    <div class="col-span-1">Categoria: {{ p.fkProductCategory }}</div>
-                    <div class="col-span-1 d-flex">
-                        <v-icon small class="mr-2" @click="openEditProductDialog(p.id, p, edit)">mdi-pencil</v-icon>
-                        <v-icon small class="mr-2" @click="openProductDetailsDialog(p.id, p)">mdi-magnify</v-icon>
-                        <v-icon small class="mr-2" @click="deleteProduct(p.id, deleteItem)">mdi-delete</v-icon>
-                    </div>
-                </div>
-            </div>
+            <table class="table-list">
+                <thead>
+                    <tr>
+                        <th v-for="header in tableHeaders" :key="header">
+                            {{ header }}
+                        </th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="p in data.result" :key="p.id">
+                        <td>{{ p.productName }}</td>
+                        <td>{{ p.productDescription }}</td>
+                        <td>{{ p.sellPrice }}</td>
+                        <td>{{ p.costPrice }}</td>
+                        <td>{{ p.fkProductCategory }}</td>
+                        <td>
+                            <v-icon small class="mr-2" @click="openEditProductDialog(p.id, p, edit, refresh)">mdi-pencil</v-icon>
+                            <v-icon small class="mr-2" @click="openProductDetailsDialog(p.id, p)">mdi-magnify</v-icon>
+                            <v-icon small class="mr-2" @click="deleteProduct(p.id, deleteItem, refresh)">mdi-delete</v-icon>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <div class="add-btn">
                 <v-row class="add-btn">
                     <v-btn color="#4caf50" @click="openAddProductDialog" style="margin-bottom: 2rem; margin-left: 1rem;">
@@ -64,7 +71,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-btn color="blue darken-1" text @click="close">Fechar</v-btn>
-                        <v-btn color="#4caf50" text @click="() => save(create, edit)">Salvar</v-btn>
+                        <v-btn color="#4caf50" text @click="() => save(create, edit, refresh)" v-if="!isDetailsDialog">Salvar</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -77,8 +84,17 @@
 <script setup>
     import { ref } from 'vue';
 
+    const tableHeaders = [
+        'Producto',
+        'Descrição',
+        'Preço de Venda',
+        'Preço de Compra',
+        'Categoria',
+    ];
+
     const dialog = ref(false);
     const dialogTitle = ref('');
+    const isDetailsDialog = ref(false);
     const currentProductId = ref(null);
 
     const editedProduct = ref({
@@ -89,16 +105,7 @@
         productCategory: '',
     });
 
-    const apiBaseUri = 'https://localhost:7171/api/Products/';
-
-    const headers = [
-        { text: 'ID', value: 'id' },
-        { text: 'Nome', value: 'productName' },
-        { text: 'Descrição', value: 'productDescription' },
-        { decimal: 'Preço de Venda', value: 'sellPrice' },
-        { decimal: 'Preço de Compra', value: 'costPrice' },
-        { guid: 'Categoria', value: 'fkProductCategory' },
-    ];
+    const apiBaseUri = 'https://localhost:7171/api/Products';
 
     const openAddProductDialog = () => {
         dialog.value = true;
@@ -124,53 +131,51 @@
         editedProduct.value = { ...product };
         currentProductId.value = id;
         dialog.value = true;
+        isDetailsDialog.value = true;
     };
 
-    const deleteProduct = async (id, deleteItem) => {
+    const deleteProduct = async (id, deleteItem, refresh) => {
         await deleteItem(id);
+        refresh();
     };
 
     const close = () => {
         dialog.value = false;
+        isDetailsDialog.value = false;
     };
 
-    const save = async (createFunction, editFunction) => {
+    const save = async (createFunction, editFunction, refresh) => {
         if (currentProductId.value) {
             await editFunction(currentProductId.value, editedProduct.value);
         } else {
             await createFunction(editedProduct.value);
         }
+        dialog.value = false;
         close();
+        refresh();
     };
 </script>
 
 <style scoped>
-    .grid {
-        display: flex;
-        flex-wrap: wrap;
-        max-width: 80%;
-        margin: 0 auto;
+    table {
+        border-collapse: collapse;
+        width: 100%;
     }
 
-        .grid > div {
-            flex: 1 0 200px;
-            margin: 1rem;
-            border: 1px solid #4caf50;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
+    th, td {
+        border: 1px solid #4caf50;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #16161d;
+        color: #fec859;
+        font-weight: 200;
+    }
 
     .mdi-icon {
         color: #4caf50;
-    }
-
-    .product-icon {
-        color: #fec859;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 1rem;
-        font-size: 3rem;
     }
 
     .col-span-1 {
@@ -191,6 +196,9 @@
         align-items: center;
         margin-top: 1.5rem;
     }
+
+    .table-list {
+        max-width: 90%;
+        margin: 0 auto;
+    }
 </style>
-
-
