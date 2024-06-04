@@ -1,6 +1,6 @@
 <template>
     <div>
-        <slot :data="data" :create="createItem" :edit="editItem" :delete="deleteItem" :refresh="fetchData"></slot>
+        <slot :data="data" :create="createItem" :edit="editItem" :deleteItem="deleteItem" :refresh="fetchData"></slot>
     </div>
 </template>
 
