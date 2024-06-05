@@ -42,7 +42,7 @@
                 },
                 body: JSON.stringify(item)
             });
-            data.value.push(response);
+            data.value = response;
         } catch (error) {
             console.error('Error creating item:', error);
         }
@@ -57,7 +57,11 @@
                 },
                 body: JSON.stringify(item)
             });
-            data.value = data.value.map(d => d.id === id ? item : d);
+            if (data.value.id === id) {
+                for (let key in item) {
+                    data.value[key] = item[key];
+                }
+            }
         } catch (error) {
             console.error('Error editing item:', error);
         }
