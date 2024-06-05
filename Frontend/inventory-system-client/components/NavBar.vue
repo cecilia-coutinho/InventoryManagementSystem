@@ -5,6 +5,7 @@
         <v-btn text :to="{ path: '/' }">Home</v-btn>
         <v-btn text :to="{ path: '/categories' }">Categorias</v-btn>
         <v-btn text :to="{ path: '/products' }">Productos</v-btn>
+        <v-btn text :to="{ path: '/inventory' }">Inventário</v-btn>
         <v-btn text :to="{ path: '/suppliers' }">Fornecedores</v-btn>
     </v-app-bar>
 </template>

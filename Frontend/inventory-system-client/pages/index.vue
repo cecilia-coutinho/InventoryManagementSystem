@@ -11,6 +11,7 @@
                         color="#fec859" iconColor="#fec859" />
                     <DashboardCard title="Produtos" :to="{ path: '/products' }" icon="mdi-cart-outline" color="#43b5a0"
                         iconColor="#43b5a0" />
+                    <DashboardCard title="Inventário" :to="{ path: '/inventory' }" icon="mdi-package-variant-closed" />
                     <DashboardCard title="Fornecedores" :to="{ path: '/suppliers' }" icon="mdi-truck-outline"
                         color="#491d88" iconColor="#491d88" />
                 </v-row>
