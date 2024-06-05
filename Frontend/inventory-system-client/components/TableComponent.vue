@@ -5,7 +5,7 @@
         </div>
     </div>
 
-    <v-data-table class="table-list" :items="data.result">
+    <v-data-table class="table-list" :items="data.result" :items-per-page="-1">
         <thead>
             <tr>
                 <th v-for="header in headers" :key="header" style="text-align: center;">
@@ -38,6 +38,8 @@
                 </td>
             </tr>
         </tbody>
+        <template v-slot:bottom>
+        </template>
     </v-data-table>
     <div class="add-btn">
         <v-row class="add-btn">
