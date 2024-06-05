@@ -211,7 +211,7 @@
         line-height: 2.5;
         border: 1px solid #2A2A2A;
         border-radius: 0.25rem;
-        appearance: none; /* Remove default arrow */
+        appearance: none;
         background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23B0B0B0" d="M2 0L0 2h4z"/></svg>');
         background-repeat: no-repeat;
         background-position: right 0.75rem center;
