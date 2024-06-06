@@ -50,35 +50,6 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue';
-
-    const fkOptions = ref({
-        fkProductCategory: []
-    });
-
-    const isLoading = ref(true);
-
-    const fetchFKOptions = async () => {
-        try {
-            for (const key in fkInfo) {
-                const { uri, displayField } = fkInfo[key];
-                const { data, error } = await useFetch(uri);
-                if (error.value) {
-                    console.error('Failed to fetch data:', error.value);
-                } else {
-                    fkOptions.value[key] = data.value.map(item => ({ id: item.id, productCategoryName: item[displayField] }));
-                    console.log(`Mapped fkOptions for ${key}:`, fkOptions.value[key]); // Debugging log
-                }
-            }
-        } catch (error) {
-            console.error('Failed to fetch data:', error);
-        } finally {
-            isLoading.value = false;
-        }
-    };
-
-    onMounted(fetchFKOptions);
-
     const pageTitle = 'Produtos';
     const pageDescription = 'Administre seus produtos aqui.';
     const entityName = 'Produto';
@@ -105,6 +76,34 @@
             displayField: 'productCategoryName'
         }
     };
+
+    const fkOptions = ref({
+        fkProductCategory: []
+    });
+    const isLoading = ref(true);
+    const handleError = (error) => {
+        console.error('Failed to fetch data:', error);
+    };
+
+    const fetchCategoryOptions = async () => {
+        try {
+            for (const key in fkInfo) {
+                const { uri, displayField } = fkInfo[key];
+                const { data, error } = await useFetch(uri);
+                if (error.value) {
+                    handleError(error.value);
+                } else {
+                    fkOptions.value[key] = data.value.map(item => ({ id: item.id, productCategoryName: item[displayField] }));
+                   // console.log(`Mapped fkOptions for ${key}:`, fkOptions.value[key]);
+                }
+            }
+        } catch (error) {
+            handleError(error.value);
+        } finally {
+            isLoading.value = false;
+        }
+    };
+    onMounted(fetchCategoryOptions);
 
     const entityFields = [
         { key: 'productName', label: 'Nome do Produto', rules: [v => !!v || 'Nome do Produto é obrigatório', v => (v && v.length <= 100) || 'Nome do Produto deve ter no máximo 100 caracteres'] },
