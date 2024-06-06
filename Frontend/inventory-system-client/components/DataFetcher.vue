@@ -5,8 +5,6 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch } from 'vue';
-
     defineOptions({
         name: 'DataFetcher'
     });
@@ -57,11 +55,6 @@
                 },
                 body: JSON.stringify(item)
             });
-            if (data.value.id === id) {
-                for (let key in item) {
-                    data.value[key] = item[key];
-                }
-            }
         } catch (error) {
             console.error('Error editing item:', error);
         }
@@ -75,7 +68,6 @@
                     'Content-Type': 'application/json',
                 }
             });
-            data.value = data.value.filter(d => d.id !== id);
         } catch (error) {
             console.error('Error deleting item:', error);
         }
