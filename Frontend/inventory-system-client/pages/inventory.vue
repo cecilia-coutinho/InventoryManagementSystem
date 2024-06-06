@@ -54,6 +54,7 @@
 </template>
 
 <script setup>
+
     const pageTitle = 'Inventário';
     const pageDescription = 'Administre seu inventário aqui.';
     const entityName = 'Inventário';
@@ -113,22 +114,28 @@
     const fetchProductOptions = async () => {
         try {
             const { uri, displayField } = fkInfo.fkProductId;
-            const { data, error } = await useFetch(uri);
-            if (data.value && data.value.result && Array.isArray(data.value.result)) {
+            const inventoryUri = apiBaseUri;
+
+            const { data: productData, error: productError } = await useFetch(uri);
+            const { data: inventoryData, error: inventoryError } = await useFetch(inventoryUri);
+
+            if (productData.value && productData.value.result && Array.isArray(productData.value.result) &&
+                inventoryData.value && inventoryData.value.result && Array.isArray(inventoryData.value.result)) {
+
+                const inventoryProductIds = new Set(inventoryData.value.result.map(item => item.fkProductId));
+
                 productOptions.value.dictionary = {};
-                productOptions.value.productNames = data.value.result.map(item => {
-                    productOptions.value.dictionary[item.id] = item[displayField];
-                    return item[displayField];
-                });
-            }
-            else if (error.value) {
-                handleError();
-            }
-            else {
-                console.error('Products data is not an array or is empty:', data.value);
+                productOptions.value.productNames = productData.value.result
+                    .filter(product => !inventoryProductIds.has(product.id))
+                    .map(product => {
+                        productOptions.value.dictionary[product.id] = product[displayField];
+                        return product[displayField];
+                    });
+            } else {
+                handleError(productError.value || inventoryError.value || new Error('Invalid data structure'));
             }
         } catch (error) {
-            handleError();
+            handleError(error);
         } finally {
             isLoading.value = false;
         }
@@ -153,11 +160,13 @@
             minStockLevel: 0,
             maxStockLevel: 0
         };
+        selectedProduct.value = '';
     };
     const openEditDialog = (id, entity) => {
         dialogTitle.value = `Editar ${entityName}`;
         editedEntity.value = { ...entity };
         currentEntityId.value = id;
+        selectedProduct.value = entity.fkProductId;
         dialog.value = true;
     };
 
@@ -172,6 +181,7 @@
     const deleteEntity = async (id, deleteItem, refresh) => {
         await deleteItem(id);
         refresh();
+        fetchProductOptions();
     };
 
     const close = () => {
@@ -188,6 +198,7 @@
         dialog.value = false;
         close();
         refresh();
+        fetchProductOptions();
     };
 </script>
 
