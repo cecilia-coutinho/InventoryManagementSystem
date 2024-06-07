@@ -48,7 +48,7 @@ This project is a simplified Inventory Management System designed to be a functi
 
 The SQL design follows a relational database model, with tables representing entities such as Contacts, Customers, Inventories, Products, ProductCategories, Suppliers, Product Suppliers, Orders and OrderDetails.
 
-![ER Model](InventoryManagementSystem/Frontend/inventory-system-client/public/assets/images/diagram-inventory-system-db.png)
+![ER Model](/Frontend/inventory-system-client/public/assets/images/diagram-inventory-system-db.png)
 
 ### 🎨UI Design
 
@@ -56,17 +56,17 @@ The UI was created to be easy to use and include essential features.
 
 - Dashboard:
 
-![Dashboard](InventoryManagementSystem/Frontend/inventory-system-client/public/assets/images/dashboard.png)
+![Dashboard](/Frontend/inventory-system-client/public/assets/images/dashboard.png)
 
 \*Menu
 
-![Menu](InventoryManagementSystem/Frontend/inventory-system-client/public/assets/images/menu.png)
+![Menu](/Frontend/inventory-system-client/public/assets/images/menu.png)
 
 - Pages:
 
-![Produtos](InventoryManagementSystem/Frontend/inventory-system-client/public/assets/images/produtos.png)
+![Produtos](/Frontend/inventory-system-client/public/assets/images/produtos.png)
 
-![Categorias](InventoryManagementSystem/Frontend/inventory-system-client/public/assets/images/categorias.png)
+![Categorias](/Frontend/inventory-system-client/public/assets/images/categorias.png)
 
 ### 🏗️ Code Structure
 
