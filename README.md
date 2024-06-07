@@ -1,6 +1,6 @@
 <h1 align="center" style="margin: 1rem;">Inventory Management System 💻📦🏷️📈 </h1>
 
-<p style="text-align: center; font-size: 1rem; margin-top: 2rem;">
+<p align="center" style="font-size: 1rem; margin-top: 2rem;">
 by <a href="https://github.com/Cecilia-Coutinho">Cecilia Coutinho</a>
 </p>
 
