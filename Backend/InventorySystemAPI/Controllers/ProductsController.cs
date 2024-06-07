@@ -21,7 +21,7 @@ namespace InventorySystemAPI.Controllers
         // GET: api/Products?pageSize=10&pageNumber=1&filterOn=ProductName&filterQuery=Product&sortBy=ProductName&isDescending=true
         [HttpGet]
         public async Task<IActionResult> GetProducts(
-            [FromQuery] int pageSize = 10,
+            [FromQuery] int pageSize = 1000,
             [FromQuery] int pageNumber = 1,
             [FromQuery] string? filterOn = null,
             [FromQuery] string? filterQuery = null,

@@ -22,7 +22,7 @@ namespace InventorySystemAPI.Controllers
         // GET: api/Suppliers?pageSize=10&pageNumber=1&filterOn=SupplierName&filterQuery=John&sortBy=SupplierName&isDescending=true
         [HttpGet]
         public async Task<IActionResult> GetSuppliers(
-            [FromQuery] int pageSize = 10,
+            [FromQuery] int pageSize = 1000,
             [FromQuery] int pageNumber = 1,
             [FromQuery] string? filterOn = null,
             [FromQuery] string? filterQuery = null,
