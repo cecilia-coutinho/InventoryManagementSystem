@@ -4,9 +4,9 @@
 by <a href="https://github.com/Cecilia-Coutinho">Cecilia Coutinho</a>
 </p>
 
-<div align="center" style="font-size: 26px; margin-top: 3rem; margin-bottom: 2rem;">
+<h1 align="center" style="font-size: 26px; margin-top: 3rem; margin-bottom: 2rem;">
 🔍 Overview
-</div>
+</h1>
 
 <div style="text-align: left; font-size: 1rem; margin-top: 2rem; margin-bottom: 2rem;">
 <p>
