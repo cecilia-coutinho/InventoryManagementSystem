@@ -44,9 +44,21 @@ namespace InventorySystemAPI.Controllers
                     return NotFound("No data found.");
                 }
 
+                var resultDto = result.Select(s => new SupplierReadDto
+                {
+                    Id = s.Id,
+                    SupplierName = s.SupplierName,
+                    FKContactId = s.FKContactId,
+                    ContactName = s.Contact?.FirstName + " " + s.Contact?.LastName,
+                    ContactEmail = s.Contact?.Email,
+                    SupplierAddress = s.SupplierAddress,
+                    CreatedAt = s.CreatedAt,
+                    UpdatedAt = s.UpdatedAt
+                });
+
                 return Ok(new
                 {
-                    Result = result,
+                    Result = resultDto,
                     TotalRecordCount = totalRecordCount,
                     TotalPages = totalPages,
                     PageNumberMessage = pageNumberMessage,
@@ -72,7 +84,19 @@ namespace InventorySystemAPI.Controllers
                 return NotFound("Supplier not found.");
             }
 
-            return Ok(supplier);
+            var resultDto = new SupplierReadDto
+            {
+                Id = supplier.Id,
+                SupplierName = supplier.SupplierName,
+                FKContactId = supplier.FKContactId,
+                ContactName = supplier.Contact?.FirstName + " " + supplier.Contact?.LastName,
+                ContactEmail = supplier.Contact?.Email,
+                SupplierAddress = supplier.SupplierAddress,
+                CreatedAt = supplier.CreatedAt,
+                UpdatedAt = supplier.UpdatedAt
+            };
+
+            return Ok(resultDto);
         }
 
         // POST: api/Suppliers
