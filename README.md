@@ -4,7 +4,7 @@
 by <a href="https://github.com/Cecilia-Coutinho">Cecilia Coutinho</a>
 </p>
 
-<div align="center" style="font-size: 2rem; margin-top: 3rem; margin-bottom: 2rem;">
+<div align="center" style="font-size: 26px; margin-top: 3rem; margin-bottom: 2rem;">
 🔍 Overview
 </div>
 
