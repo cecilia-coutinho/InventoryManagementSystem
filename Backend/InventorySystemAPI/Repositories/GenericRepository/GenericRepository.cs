@@ -14,12 +14,12 @@ namespace InventorySystemAPI.Repositories.GenericRepository
             _context = context;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public virtual async Task<T> GetByIdAsync(Guid id)
         {
             var entity = await _context.Set<T>().FindAsync(id);
 
