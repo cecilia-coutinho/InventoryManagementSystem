@@ -34,6 +34,7 @@ namespace InventorySystemAPI
             builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+            builder.Services.AddScoped<IProductSupplierRepository, ProductSupplierRepository>();
 
             //services cors
             builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
